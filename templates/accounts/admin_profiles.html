@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extrastyles %}
+<link rel="stylesheet" href="{% static 'accounts/admin_sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/admin_profiles.css' %}">
+{% endblock %}
+
+{% block content %}
+<style>
+body {
+    background: #fff;
+}
+</style>
+
+<button class="hamburger-btn d-lg-none" id="openSidebarBtn" aria-label="Open sidebar">
+    <svg width="32" height="32" fill="#222" viewBox="0 0 16 16"><path d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+</button>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="admin-sidebar" id="adminSidebar">
+    <div class="logo-row">
+        <img src="{% static 'accounts/vtslogo.jpg' %}" alt="Logo">
+        <span>VTS Developers</span>
+        <button class="close-btn d-lg-none" id="closeSidebarBtn" aria-label="Close sidebar">
+            &times;
+        </button>
+    </div>
+    <nav class="nav flex-column">
+        <a class="nav-link" href="{% url 'admin_home' %}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-middle">
+                <path d="M23.9937 11.9766C23.9937 12.8203 23.3687 13.4813 22.6603 13.4813H21.3268L21.356 20.9906C21.356 21.1172 21.3476 21.2437 21.3351 21.3703V22.125C21.3351 23.1609 20.5893 24 19.6683 24H19.0016C18.9558 24 18.9099 24 18.8641 23.9953C18.8058 24 18.7474 24 18.6891 24H17.3348H16.3347C15.4138 24 14.6679 23.1609 14.6679 22.125V21V18C14.6679 17.1703 14.072 16.5 13.3345 16.5H10.6684C9.93091 16.5 9.335 17.1703 9.335 18V21V22.125C9.335 23.1609 8.58911 24 7.66825 24H6.66825H5.31388C5.25638 24 5.19825 24 5.14013 23.9953C5.09419 24 5.0365 24 4.99056 24H4.33169C3.41083 24 2.66497 23.1609 2.66497 22.125V17.3297C2.66497 17.2453 2.66497 17.1563 2.66497 17.0719V13.4813H1.33372C0.62527 13.4813 0.000244141 12.8203 0.000244141 11.9766C0.000244141 11.5547 0.156369 11.1797 0.406369 10.8844L11.073 0.375C11.323 0.140625 11.6668 0 12.0105 0C12.3543 0 12.698 0.140625 12.948 0.375L23.6105 10.8844C23.8605 11.1797 24.0167 11.5547 23.9937 11.9766Z" fill="#374151"/>
+            </svg>
+            <span class="overview-label">Overview</span>
+        </a>
+        <a class="nav-link" href="{% url 'admin_projects' %}">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-middle">
+                            <path d="M13.5 5.12252V16.4996C13.5 17.3294 12.8297 17.9997 12 17.9997C11.1703 17.9997 10.5 17.3294 10.5 16.4996V5.12252L7.05938 8.56331C6.47344 9.14927 5.52188 9.14927 4.93594 8.56331C4.35 7.97734 4.35 7.02573 4.93594 6.43977L10.9359 0.439475C11.5219 -0.146492 12.4734 -0.146492 13.0594 0.439475L19.0594 6.43977C19.6453 7.02573 19.6453 7.97734 19.0594 8.56331C18.4734 9.14927 17.5219 9.14927 16.9359 8.56331L13.5 5.12252ZM3 16.4996H9C9 18.1544 10.3453 19.4998 12 19.4998C13.6547 19.4998 15 18.1544 15 16.4996H21C22.6547 16.4996 24 17.845 24 19.4998V20.9999C24 22.6546 22.6547 24 21 24H3C1.34531 24 0 22.6546 0 20.9999V19.4998C0 17.845 1.34531 16.4996 3 16.4996ZM20.25 21.3749C20.5484 21.3749 20.8345 21.2563 21.0455 21.0453C21.2565 20.8344 21.375 20.5482 21.375 20.2498C21.375 19.9514 21.2565 19.6653 21.0455 19.4543C20.8345 19.2433 20.5484 19.1248 20.25 19.1248C19.9516 19.1248 19.6655 19.2433 19.4545 19.4543C19.2435 19.6653 19.125 19.9514 19.125 20.2498C19.125 20.5482 19.2435 20.8344 19.4545 21.0453C19.6655 21.2563 19.9516 21.3749 20.25 21.3749Z" fill="white"/>
+                        </svg>
+            <span class="projects-label">Projects</span>
+        </a>
+        <a class="nav-link active" href="{% url 'admin_profiles' %}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-middle">
+                <path d="M3 24H21C22.6547 24 24 22.4625 24 20.5714V6.85714C24 4.96607 22.6547 3.42857 21 3.42857H13.5C13.0266 3.42857 12.5812 3.17679 12.3 2.74286L11.4 1.37143C10.8328 0.508928 9.94219 0 9 0H3C1.34531 0 0 1.5375 0 3.42857V20.5714C0 22.4625 1.34531 24 3 24Z" fill="#374151"/>
+            </svg>
+            <span class="profile-label">Profile</span>
+        </a>
+        <a class="nav-link" href="#" id="addStudentBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm4.216 1.447A2.5 2.5 0 0 1 15 10.5V12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-1.5a2.5 2.5 0 0 1 2.784-2.553A4.992 4.992 0 0 1 8 9c1.306 0 2.417-.417 3.216-1.553zM8 10a3.978 3.978 0 0 0-3.468 2H13.468A3.978 3.978 0 0 0 8 10z"/></svg>
+            Add Students
+        </a>
+    </nav>
+    <form method="post" action="/accounts/logout/" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger w-100 btn-logout">Logout</button>
+    </form>
+</div>
+
+<div class="admin-main-content">
+    <div id="profiles-view">
+        <h2>Student Profiles</h2>
+        <div class="row g-4 mt-3">
+            {% for student in students %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="profile-card" data-student-id="{{ student.id }}">
+                    <div class="profile-image">
+                        {% if student.image %}
+                        <img src="{{ student.image.url }}" alt="{{ student.student_name }}" class="img-fluid rounded-circle">
+                        {% else %}
+                        <img src="{% static 'accounts/default_profile.png' %}" alt="Default Profile" class="img-fluid rounded-circle">
+                        {% endif %}
+                    </div>
+                    <div class="profile-info mt-3">
+                        <h5>{{ student.student_name }}</h5>
+                        <p class="mb-1">{{ student.student_email }}</p>
+                        <p class="text-muted mb-2">{{ student.course_details }}</p>
+                        <p class="text-muted"><small>Joined {{ student.course_joined_date|date:"M d, Y" }}</small></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+                </svg>
+               
+            </button>
+            <h2 class="mb-0" id="studentProjectsTitle"></h2>
+        </div>
+        <div class="row g-4" id="studentProjects">
+            <!-- Projects will be loaded here dynamically -->
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'accounts/admin_profiles.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var openBtn = document.getElementById('openSidebarBtn');
+    var closeBtn = document.getElementById('closeSidebarBtn');
+    var sidebar = document.getElementById('adminSidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    function openSidebar() {
+        sidebar.classList.add('sidebar-open');
+        sidebar.classList.add('show');
+        overlay.classList.add('show');
+        overlay.style.display = 'block';
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('sidebar-open');
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+        overlay.style.display = 'none';
+    }
+    if (openBtn) openBtn.onclick = openSidebar;
+    if (closeBtn) closeBtn.onclick = closeSidebar;
+    if (overlay) overlay.onclick = closeSidebar;
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Add Student Modal logic
+const addStudentBtn = document.getElementById('addStudentBtn');
+const addStudentModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+if(addStudentBtn) {
+    addStudentBtn.onclick = function(e) {
+        e.preventDefault();
+        addStudentModal.show();
+    };
+}
+const addStudentForm = document.getElementById('addStudentForm');
+if(addStudentForm) {
+    addStudentForm.onsubmit = async function(e) {
+        e.preventDefault();
+        document.getElementById('addStudentError').classList.add('d-none');
+        document.getElementById('addStudentSuccess').classList.add('d-none');
+        const formData = new FormData(addStudentForm);
+        const response = await fetch('/accounts/add-student/', {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body: formData
+        });
+        const data = await response.json();
+        if(data.success) {
+            document.getElementById('addStudentSuccess').classList.add('d-none');
+            document.getElementById('addStudentError').classList.add('d-none');
+            addStudentForm.reset();
+            // Show toast notification and close modal after 1.5s
+            const toast = document.getElementById('addStudentToast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+                bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
+            }, 1500);
+        } else {
+            document.getElementById('addStudentError').textContent = data.error || 'Error adding student.';
+            document.getElementById('addStudentError').classList.remove('d-none');
+        }
+    };
+}
+// Set max date for course joined date (future dates not allowed)
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('courseJoinedDate');
+    if (dateInput) {
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        dateInput.max = `${yyyy}-${mm}-${dd}`;
+    }
+});
+</script>
+<!-- Add Student Modal -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addStudentForm" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="studentUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="studentUsername" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="studentPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="studentPassword" name="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="studentName" class="form-label">Student Name</label>
+                                <input type="text" class="form-control" id="studentName" name="student_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="studentContact" class="form-label">Student Contact</label>
+                                <input type="text" class="form-control" id="studentContact" name="student_contact" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="studentImage" class="form-label">Student Image</label>
+                                <input type="file" class="form-control" id="studentImage" name="student_image" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="studentEmail" class="form-label">Student Email</label>
+                                <input type="email" class="form-control" id="studentEmail" name="student_email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="studentAddress" class="form-label">Student Address</label>
+                                <textarea class="form-control" id="studentAddress" name="student_address" rows="2" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="courseJoinedDate" class="form-label">Course Joined Date</label>
+                                <input type="date" class="form-control" id="courseJoinedDate" name="course_joined_date" required min="" max="">
+                            </div>
+                            <div class="mb-3">
+                                <label for="courseDetails" class="form-label">Course Details</label>
+                                <textarea class="form-control" id="courseDetails" name="course_details" rows="2" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="addStudentError" class="alert alert-danger d-none"></div>
+                    <div id="addStudentSuccess" class="alert alert-success d-none"></div>
+                    <div id="addStudentToast" class="toast align-items-center text-bg-success border-0 position-fixed top-0 end-0 m-4" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 2000; display:none;">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                Student added successfully!
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

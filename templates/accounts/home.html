@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>You are logged in as a superuser.</p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var openBtn = document.getElementById('openSidebarBtn');
+    var closeBtn = document.getElementById('closeSidebarBtn');
+    var sidebar = document.getElementById('adminSidebar');
+    var overlay = document.getElementById('sidebarOverlay');
+    function openSidebar() {
+        sidebar.classList.add('sidebar-open');
+        sidebar.classList.add('show');
+        overlay.classList.add('show');
+        overlay.style.display = 'block';
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('sidebar-open');
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+        overlay.style.display = 'none';
+    }
+    if (openBtn) openBtn.onclick = openSidebar;
+    if (closeBtn) closeBtn.onclick = closeSidebar;
+    if (overlay) overlay.onclick = closeSidebar;
+});
+</script>
+{% endblock %}

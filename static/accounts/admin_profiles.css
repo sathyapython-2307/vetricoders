@@ -1,0 +1,161 @@
+/* Admin Profiles View Styles */
+.profile-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #ffa94d;
+    background: #fff;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info h5 {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #222;
+    margin-bottom: 0.5rem;
+}
+
+.profile-info p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.profile-info .text-muted {
+    color: #666 !important;
+}
+
+/* Project Card Styles */
+.project-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.project-screenshot-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    background: #f8f9fa;
+    overflow: hidden;
+}
+
+.project-screenshot-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.project-screenshot-container .no-screenshot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    color: #adb5bd;
+    font-size: 0.9rem;
+}
+
+.project-info {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.project-info h5 {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #222;
+    margin-bottom: 0.75rem;
+}
+
+.project-info small {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.project-info .btn-sm {
+    padding: 0.4rem 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.project-info .btn-outline-primary {
+    border-color: #ff0080;
+    color: #ff0080;
+}
+
+.project-info .btn-outline-primary:hover {
+    background: #ff0080;
+    color: #fff;
+    border-color: #ff0080;
+}
+
+.project-info .btn-outline-success {
+    border-color: #00b894;
+    color: #00b894;
+}
+
+.project-info .btn-outline-success:hover {
+    background: #00b894;
+    color: #fff;
+    border-color: #00b894;
+}
+
+/* Animation for view transitions */
+.admin-main-content > div {
+    transition: opacity 0.3s ease;
+}
+
+/* Back button styling */
+#backToProfiles {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-color: #ff0080;
+    color: #ff0080;
+}
+
+#backToProfiles:hover {
+    background: #ff0080;
+    color: #fff;
+    border-color: #ff0080;
+}
