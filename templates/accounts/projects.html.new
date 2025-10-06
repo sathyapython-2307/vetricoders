@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/admin_sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'accounts/projects.css' %}">
@@ -83,7 +84,7 @@
                         </div>
                         <div class="actions">
                             {% if project.project_link %}
-                            <a href="{{ project.project_link }}" target="_blank" class="btn btn-view btn-outline-primary" onclick="recordProjectView({{ project.id }}, event); return true;">
+                            <a href="{{ project.project_link }}" target="_blank" class="btn btn-view btn-outline-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
                                     <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"/>
                                 </svg>
@@ -91,7 +92,7 @@
                             </a>
                             {% endif %}
                             {% if project.output_link %}
-                            <a href="{{ project.output_link }}" target="_blank" class="btn btn-view btn-primary" onclick="recordProjectView({{ project.id }}, event); return true;">
+                            <a href="{{ project.output_link }}" target="_blank" class="btn btn-view btn-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                     <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
                                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
@@ -137,80 +138,6 @@
 {% endif %}
 
 <script>
-    async function recordProjectView(projectId, event) {
-        console.log('=== View Recording Started ===');
-        console.log('Project ID:', projectId);
-        console.log('Event type:', event.type);
-        
-        try {
-            // Get the CSRF token from the cookie
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            
-            const csrftoken = getCookie('csrftoken');
-            console.log('CSRF token found:', !!csrftoken);
-            
-            // Find the view count element
-            const projectCard = event.target.closest('.project-card');
-            console.log('Project card found:', !!projectCard);
-            
-            const viewCountElement = projectCard.querySelector('.stat-item:first-child span');
-            console.log('View count element found:', !!viewCountElement);
-            console.log('Current view count:', viewCountElement ? viewCountElement.textContent : 'Not found');
-            
-            const formData = new FormData();
-            formData.append('project_id', projectId);
-            
-            console.log('Sending POST request...');
-            const response = await fetch('/accounts/record-project-view/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: formData,
-                credentials: 'same-origin'
-            });
-            
-            console.log('Response status:', response.status);
-            console.log('Response ok:', response.ok);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            console.log('Response data:', data);
-            
-            if (data.success && data.newCount !== undefined) {
-                console.log('Updating view count to:', data.newCount);
-                if (viewCountElement) {
-                    viewCountElement.textContent = data.newCount;
-                }
-            } else {
-                console.error('Invalid response data:', data);
-            }
-        } catch (error) {
-            console.error('Error in recordProjectView:', error);
-        }
-        console.log('=== View Recording Completed ===');
-    }
-    }
-</script>
-
-<script>
     document.addEventListener('DOMContentLoaded', function() {
         const openSidebarBtn = document.getElementById('openSidebarBtn');
         const closeSidebarBtn = document.getElementById('closeSidebarBtn');
@@ -233,7 +160,7 @@
         closeSidebarBtn.addEventListener('click', closeSidebar);
         sidebarOverlay.addEventListener('click', closeSidebar);
 
-        // Handle project deletion and likes
+        // Handle project deletion
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', async function(e) {
                 e.preventDefault();

@@ -46,11 +46,13 @@
                 <span>Share Your Work</span>
             </button>
             <div class="dashboard-profile-box d-flex justify-content-center align-items-center">
-                {% if user.student_profile.image %}
-                <img src="{{ user.student_profile.image.url }}" alt="Student Image" class="img-fluid rounded-circle img-student-profile">
-                {% else %}
-                <img src="{% static 'accounts/default_profile.png' %}" alt="Student Image" class="img-fluid rounded-circle img-student-profile">
-                {% endif %}
+                <a href="{% url 'student_profile' user.student_profile.id %}" class="profile-link">
+                    {% if user.student_profile.image %}
+                    <img src="{{ user.student_profile.image.url }}" alt="Student Image" class="img-fluid rounded-circle img-student-profile">
+                    {% else %}
+                    <img src="{% static 'accounts/default_profile.png' %}" alt="Student Image" class="img-fluid rounded-circle img-student-profile">
+                    {% endif %}
+                </a>
             </div>
         </div>
     </div>

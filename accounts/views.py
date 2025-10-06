@@ -1,13 +1,156 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.contrib import messages
+from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import default_storage
+
+from .models import StudentProfile, Project, StudentFollow, Notification
+
+import datetime
+
 @require_POST
 def logout_view(request):
-	logout(request)
-	return redirect('/accounts/login/')
+    logout(request)
+    return redirect('/accounts/login/')
+
+@login_required
+def student_profile_view(request, student_id):
+    student = get_object_or_404(StudentProfile, id=student_id)
+    projects = Project.objects.filter(student=student).order_by('-created_at')
+    
+    # Check if current user is following this student
+    follow_status = 'none'
+    if request.user != student.user:
+        follow = StudentFollow.objects.filter(follower=request.user, following=student).first()
+        if follow:
+            follow_status = follow.status
+    
+    # Get counts (only count accepted followers)
+    projects_count = projects.count()
+    followers_count = StudentFollow.objects.filter(following=student, status='accepted').count()
+    following_count = StudentFollow.objects.filter(follower=student.user, status='accepted').count()
+    
+    # Get pending follow requests if viewing own profile
+    pending_requests = []
+    if request.user == student.user:
+        pending_requests = StudentFollow.objects.filter(following=student, status='pending')
+    
+    context = {
+        'student': student,
+        'projects': projects,
+        'projects_count': projects_count,
+        'followers_count': followers_count,
+        'following_count': following_count,
+        'follow_status': follow_status,
+        'pending_requests': pending_requests,
+    }
+    
+    return render(request, 'accounts/student_profile.html', context)
+    
+@login_required
+@require_POST
+def request_follow(request, student_id):
+    print(f"Received follow request for student {student_id} from {request.user.username}")
+    
+    target_student = get_object_or_404(StudentProfile, id=student_id)
+    print(f"Target student found: {target_student.student_name}")
+    
+    if request.user == target_student.user:
+        print("User attempting to follow themselves")
+        return JsonResponse({'success': False, 'message': 'Cannot follow yourself'})
+    
+    # Check if a follow relationship already exists
+    existing_follow = StudentFollow.objects.filter(
+        follower=request.user,
+        following=target_student
+    ).first()
+    
+    if existing_follow:
+        print(f"Existing follow found with status: {existing_follow.status}")
+        return JsonResponse({
+            'success': False,
+            'status': existing_follow.status,
+            'message': f'Already {existing_follow.status}'
+        })
+        
+    # Create new follow request
+    follow = StudentFollow.objects.create(
+        follower=request.user,
+        following=target_student,
+        status='pending'
+    )
+    print(f"Created new follow request with status: {follow.status}")
+    
+    # Create notification
+    Notification.objects.create(
+        recipient=target_student,
+        sender=request.user,
+        notification_type='follow',
+    )
+    print("Created notification")
+        
+    return JsonResponse({
+        'success': True,
+        'status': 'pending',
+        'message': 'Follow request sent'
+    })
+    
+@login_required
+@require_POST
+def handle_follow_request(request, follow_id):
+    print(f"Processing follow request {follow_id}")
+    print(f"Request user: {request.user.username}")
+    print(f"Action: {request.POST.get('action')}")
+    
+    follow_request = get_object_or_404(StudentFollow, id=follow_id)
+    print(f"Follow request found - from {follow_request.follower.username} to {follow_request.following.student_name}")
+    
+    # Only allow the target user to accept/reject
+    if request.user != follow_request.following.user:
+        print(f"Unauthorized - request user {request.user.username} doesn't match target {follow_request.following.user.username}")
+        return JsonResponse({'success': False, 'message': 'Unauthorized'})
+    
+    action = request.POST.get('action')
+    if action == 'accept':
+        print("Accepting follow request")
+        follow_request.status = 'accepted'
+        follow_request.save()
+        
+        # Create notification for accepted follow
+        notification = Notification.objects.create(
+            recipient=follow_request.follower.student_profile,
+            sender=request.user,
+            notification_type='follow_accepted',
+        )
+        print(f"Created notification: {notification}")
+        message = 'Follow request accepted'
+        
+    elif action == 'reject':
+        print("Rejecting follow request")
+        follow_request.status = 'rejected'
+        follow_request.save()
+        message = 'Follow request rejected'
+    else:
+        print(f"Invalid action: {action}")
+        return JsonResponse({'success': False, 'message': 'Invalid action'})
+    
+    # Get updated follower count
+    followers_count = StudentFollow.objects.filter(
+        following=follow_request.following,
+        status='accepted'
+    ).count()
+    print(f"Updated follower count: {followers_count}")
+        
+    return JsonResponse({
+        'success': True,
+        'message': message,
+        'followers_count': followers_count
+    })
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.models import User
