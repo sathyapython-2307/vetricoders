@@ -162,11 +162,21 @@
             const csrftoken = getCookie('csrftoken');
             console.log('CSRF token found:', !!csrftoken);
             
-            // Find the view count element
-            const projectCard = event.target.closest('.project-card');
+            // Find the project card
+            let projectCard = event.target.closest('.project-card');
+            if (!projectCard && event.target.classList.contains('project-card')) {
+                projectCard = event.target;
+            }
             console.log('Project card found:', !!projectCard);
             
-            const viewCountElement = projectCard.querySelector('.stat-item:first-child span');
+            // Find the first stat-item (view count)
+            let viewCountElement = null;
+            if (projectCard) {
+                const statItems = projectCard.querySelectorAll('.stat-item span');
+                if (statItems.length > 0) {
+                    viewCountElement = statItems[0];
+                }
+            }
             console.log('View count element found:', !!viewCountElement);
             console.log('Current view count:', viewCountElement ? viewCountElement.textContent : 'Not found');
             
@@ -206,7 +216,6 @@
             console.error('Error in recordProjectView:', error);
         }
         console.log('=== View Recording Completed ===');
-    }
     }
 </script>
 

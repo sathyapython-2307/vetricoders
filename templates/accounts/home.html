@@ -1,9 +1,25 @@
 {% extends 'base.html' %}
+
+{% comment %} Styles moved to static/accounts/student_home.css per request (no inline styles) {% endcomment %}
+
 {% block content %}
-<div class="container mt-5 text-center">
-    <h2>Welcome, {{ user.username }}!</h2>
-    <p>You are logged in as a superuser.</p>
-</div>
+<section class="student-hero">
+    <div class="student-card card">
+        <div class="card-body text-center">
+            <div class="d-flex align-items-center justify-content-center flex-column">
+                <div class="profile-badge" aria-hidden="true">{{ user.username|slice:":1"|upper }}</div>
+                <h2 class="welcome-title">Welcome, {{ user.username }}!</h2>
+                <p class="welcome-sub">You are logged in as a superuser.</p>
+            </div>
+
+            <div class="student-meta">
+                <div class="meta-pill">Projects: {{ user.projects.count|default:0 }}</div>
+                <div class="meta-pill">Followers: {{ user.followers.count|default:0 }}</div>
+                <div class="meta-pill">Notifications: {{ unread_notifications_count|default:0 }}</div>
+            </div>
+        </div>
+    </div>
+</section>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var openBtn = document.getElementById('openSidebarBtn');

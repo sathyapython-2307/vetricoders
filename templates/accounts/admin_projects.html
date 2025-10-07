@@ -3,6 +3,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/admin_sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'accounts/projects.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/project-cards.css' %}">
 <button class="hamburger-btn d-lg-none" id="openSidebarBtn" aria-label="Open sidebar">
     <svg width="32" height="32" fill="#222" viewBox="0 0 16 16"><path d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
 </button>
@@ -52,24 +53,41 @@
             <div class="project-card">
                 <div class="project-screenshot-container">
                     {% if project.screenshot %}
-                    <a href="{{ project.output_link }}" target="_blank">
+                    <a href="{{ project.output_link }}" target="_blank" class="screenshot-link">
                         <img src="{{ project.screenshot.url }}" alt="Screenshot" class="project-screenshot">
                     </a>
                     {% else %}
                     <div class="no-screenshot">No Screenshot</div>
                     {% endif %}
                 </div>
-                <div class="project-info mt-3">
-                    <h5>{{ project.title }}</h5>
+                <div class="project-info mt-3 project-content">
+                    <h5 class="card-title">{{ project.title }}</h5>
                     <p class="student-name text-muted mb-2">By: {{ project.student.student_name }}</p>
-                    <p class="text-muted mb-2"><small>{{ project.created_at|timesince }} ago</small></p>
-                    <div class="d-flex gap-2 mt-2">
-                        {% if project.project_link %}
-                        <a href="{{ project.project_link }}" target="_blank" class="btn btn-outline-primary btn-sm">View Code</a>
-                        {% endif %}
-                        {% if project.output_link %}
-                        <a href="{{ project.output_link }}" target="_blank" class="btn btn-outline-success btn-sm">View Live</a>
-                        {% endif %}
+                    <p class="text-muted mb-2 date"><small>{{ project.created_at|timesince }} ago</small></p>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <div class="stat-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                </svg>
+                                <span>{{ project.views.count }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                                </svg>
+                                <span>{{ project.likes.count }}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-auto actions">
+                            {% if project.project_link %}
+                            <a href="{{ project.project_link }}" target="_blank" class="btn btn-outline-primary btn-sm btn-view">View Code</a>
+                            {% endif %}
+                            {% if project.output_link %}
+                            <a href="{{ project.output_link }}" target="_blank" class="btn btn-outline-success btn-sm btn-view">View Live</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

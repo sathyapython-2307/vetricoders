@@ -53,17 +53,18 @@
     color: #222;
 }
 .admin-sidebar .nav {
-    margin-top: 2.5rem;
+    margin-top: 1.5rem;
     width: 100%;
     flex: 1 1 auto;
+    padding: 0 1rem;
 }
 
 /* Logout Form */
 .admin-sidebar .logout-form {
     width: 100%;
-    padding: 1rem 1.5rem;
+    padding: 1.5rem 1rem 1rem 1rem;
     margin-top: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .admin-sidebar .btn-logout {
@@ -76,33 +77,34 @@
 .admin-sidebar .nav-link {
     display: flex;
     align-items: center;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #222;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.5rem;
     text-decoration: none;
     background: none;
-    transition: none;
+    transition: all 0.3s ease;
+    border-radius: 8px;
 }
 
-/* Remove hover effect */
+/* Hover effect */
 .admin-sidebar .nav-link:hover,
 .admin-sidebar .nav-link:focus {
-    color: #222;
-    background: none;
+    color: #333;
+    background: rgba(0, 0, 0, 0.05);
 }
 
-/* Only selected (active) nav link is black */
+/* Active nav link styling */
 .admin-sidebar .nav-link.active {
-    color: #000;
-}
-.admin-sidebar .nav-link.active, .admin-sidebar .nav-link:hover {
     color: #fff;
     background: #222;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .admin-sidebar .nav-link svg {
-    margin-right: 1rem;
-    font-size: 1.4rem;
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+    flex-shrink: 0;
 }
 @media (max-width: 991.98px) {
     .admin-sidebar .logo-row {
@@ -121,8 +123,9 @@
     }
 }
 .admin-main-content {
-    margin-left: 260px;
+    margin-left: 280px;
     padding: 2rem;
+    transition: margin-left 0.3s ease;
 }
 @media (max-width: 768px) {
     .admin-main-content {

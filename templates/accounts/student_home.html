@@ -1,5 +1,57 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block extrastyles %}
+<style>
+    /* Scoped visual polish for student_home only */
+    .admin-main-content h2 {
+        font-weight: 800;
+        letter-spacing: -0.4px;
+        color: #0f172a;
+        margin-bottom: 0.75rem;
+    }
+    .dashboard-row-centered { display:flex; justify-content:center; }
+    .dashboard-center-group { display:flex; gap:1rem; align-items:center; flex-wrap:wrap; }
+    .btn-search-dev, .btn-share-work { border-radius: 10px; padding:0.6rem 1rem; box-shadow: 0 8px 28px rgba(15,23,42,0.06); }
+    .btn-search-dev { background: linear-gradient(90deg,#4ade80,#10b981); color:#fff; border:none; }
+    .btn-share-work { background:#fff; border:1px solid rgba(15,23,42,0.06); }
+    .dashboard-profile-box { width:84px; height:84px; border-radius:14px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#ffffff,#f7f9ff); box-shadow:0 10px 30px rgba(2,6,23,0.06); }
+    .img-student-profile { width:68px; height:68px; object-fit:cover; }
+    .recent-uploads-title { font-weight:700; color:#0f172a; margin-bottom:0.75rem; }
+    .recent-upload-card { border-radius:10px; overflow:hidden; background:#fff; box-shadow:0 8px 26px rgba(2,6,23,0.04); border:1px solid rgba(2,6,23,0.04); }
+    .recent-upload-title { font-weight:700; color:#111827; }
+    .meta-pill-inline { display:inline-block; padding:0.25rem 0.6rem; background:rgba(15,23,42,0.04); border-radius:999px; font-weight:600; }
+    @media (max-width:576px){ .dashboard-center-group{gap:.5rem} .dashboard-profile-box{width:64px;height:64px} .img-student-profile{width:56px;height:56px} }
+    /* Override base purple icon color on this page */
+    .notification-btn svg, .admin-sidebar .logo-row span { color: #374151 !important; }
+    /* Page-scoped layout fixes: ensure main content sits to the right of the fixed sidebar */
+    /* The app's sidebar width is 260px; add extra gap so content does not touch the sidebar */
+    .admin-main-content {
+        margin-left: 320px !important; /* 60px extra gap from sidebar */
+        padding-left: 2.25rem !important;
+    }
+
+    /* Notification bell container adjustments specific to this page */
+    .notification-container {
+        top: 1.5rem;
+        right: 1.5rem;
+        left: auto;
+        z-index: 1200;
+    }
+
+    /* Make bell position responsive so it doesn't overlap the sidebar on small screens */
+    @media (max-width: 1199.98px) {
+        .admin-main-content { margin-left: 300px !important; }
+        .notification-container { right: 1rem; top: 1.25rem; left: auto; }
+    }
+    /* Keep the notification fixed to the right on wide screens as well */
+    @media (max-width: 991.98px) {
+        /* On small screens the sidebar is off-canvas; allow main content to use full width */
+        .admin-main-content { margin-left: 0 !important; padding-left: 1rem !important; }
+        .notification-container { right: 0.75rem; top: 0.75rem; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/admin_sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'accounts/student_home.css' %}">
@@ -34,18 +86,18 @@
     <button type="submit" class="btn btn-danger w-100 btn-logout">Logout</button>
     </form>
 </div>
-<div class="admin-main-content">
+    <div class="admin-main-content fade-in-up">
         <h2>Welcome, {{ user.username }}!</h2>
     <div class="dashboard-row-centered">
         <div class="dashboard-center-group">
-            <a href="{% url 'public_student_projects' %}" class="btn btn-search-dev d-inline-flex align-items-center justify-content-center flex-nowrap dashboard-btn">
+            <a href="{% url 'public_student_projects' %}" class="btn btn-search-dev d-inline-flex align-items-center justify-content-center flex-nowrap dashboard-btn slide-in-left">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2 flex-shrink-0" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <span style="font-weight:600;">Search the developers</span>
             </a>
-            <button class="btn btn-share-work d-flex align-items-center justify-content-center dashboard-btn">
+            <button class="btn btn-share-work d-flex align-items-center justify-content-center dashboard-btn slide-in-right">
                 <span>Share Your Work</span>
             </button>
-            <div class="dashboard-profile-box d-flex justify-content-center align-items-center">
+            <div class="dashboard-profile-box d-flex justify-content-center align-items-center pulse">
                 <a href="{% url 'student_profile' user.student_profile.id %}" class="profile-link">
                     {% if user.student_profile.image %}
                     <img src="{{ user.student_profile.image.url }}" alt="Student Image" class="img-fluid rounded-circle img-student-profile">
@@ -321,30 +373,6 @@ const adjustFormLayout = () => {
 window.addEventListener('load', adjustFormLayout);
 window.addEventListener('resize', adjustFormLayout);
 </script>
-<style>
-@media (max-width: 767.98px) {
-    .share-modal-body .d-flex.justify-content-between {
-        flex-direction: column !important;
-        gap: 0.75rem !important;
-        align-items: stretch !important;
-    }
-
-    .share-modal-body .btn {
-        width: 100%;
-        padding: 0.75rem 1rem;
-    }
-
-    /* Reverse button order on mobile */
-    .share-modal-body .btn-pink {
-        order: 2;
-    }
-
-    .share-modal-body .btn-secondary {
-        order: 1;
-    }
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var openBtn = document.getElementById('openSidebarBtn');
@@ -378,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <h3 class="recent-uploads-title">Recent Uploads</h3>
         <div class="recent-uploads-row">
             {% for project in user_projects %}
-            <div class="recent-upload-card">
+            <div class="recent-upload-card fade-in-up">
                 <div class="recent-upload-image">
                     {% if project.screenshot %}
                     <img src="{{ project.screenshot.url }}" alt="Screenshot">
@@ -400,12 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             <svg width="22" height="22" fill="none" stroke="#ff0080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                         </a>
                         {% endif %}
-                        <a href="{{ project.edit_url }}" class="recent-upload-action edit" title="Edit">
+                        <button class="recent-upload-action edit" title="Edit" data-project-id="{{ project.id }}" onclick="openEditModal({{ project.id }})">
                             <svg width="22" height="22" fill="none" stroke="#ff9800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-                        </a>
-                        <a href="{{ project.delete_url }}" class="recent-upload-action delete" title="Delete">
+                        </button>
+                        <button class="recent-upload-action delete" title="Delete" data-project-id="{{ project.id }}" onclick="removeFromRecent({{ project.id }})">
                             <svg width="22" height="22" fill="none" stroke="#ff5722" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/></svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -413,5 +441,197 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
+
+<!-- Edit Project Modal -->
+<div class="modal fade" id="editProjectModal" tabindex="-1" aria-labelledby="editProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProjectModalLabel">Edit Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProjectForm" enctype="multipart/form-data">
+                    <input type="hidden" id="editProjectId" name="project_id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editTitle" class="form-label">Project Title</label>
+                                <input type="text" class="form-control" id="editTitle" name="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="editDescription" name="description" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCategory" class="form-label">Category</label>
+                                <select class="form-control" id="editCategory" name="category" required>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Mobile App">Mobile App</option>
+                                    <option value="Desktop App">Desktop App</option>
+                                    <option value="Game Development">Game Development</option>
+                                    <option value="Data Science">Data Science</option>
+                                    <option value="Machine Learning">Machine Learning</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTags" class="form-label">Tags (comma-separated)</label>
+                                <input type="text" class="form-control" id="editTags" name="tags" placeholder="React, JavaScript, CSS">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editVisibility" class="form-label">Visibility</label>
+                                <select class="form-control" id="editVisibility" name="visibility" required>
+                                    <option value="Public">Public</option>
+                                    <option value="Private">Private</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editOutputLink" class="form-label">Output Link (Live Demo)</label>
+                                <input type="url" class="form-control" id="editOutputLink" name="output_link" placeholder="https://your-project.com">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProjectLink" class="form-label">Project Link (Source Code)</label>
+                                <input type="url" class="form-control" id="editProjectLink" name="project_link" placeholder="https://github.com/your-repo">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editScreenshot" class="form-label">Screenshot</label>
+                                <input type="file" class="form-control" id="editScreenshot" name="screenshot" accept="image/*">
+                                <div class="form-text">Leave empty to keep current screenshot</div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="editAllowDownloads" name="allow_downloads">
+                                <label class="form-check-label" for="editAllowDownloads">
+                                    Allow Downloads
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editProjectError" class="alert alert-danger d-none"></div>
+                    <div id="editProjectSuccess" class="alert alert-success d-none"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateProject()">Update Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Global variable to store current project data
+let currentProjectData = {};
+
+// Open edit modal and load project data
+async function openEditModal(projectId) {
+    try {
+        const response = await fetch(`/accounts/project/${projectId}/edit/`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            currentProjectData = data.project;
+            
+            // Populate form fields
+            document.getElementById('editProjectId').value = data.project.id;
+            document.getElementById('editTitle').value = data.project.title;
+            document.getElementById('editDescription').value = data.project.description;
+            document.getElementById('editCategory').value = data.project.category;
+            document.getElementById('editTags').value = data.project.tags;
+            document.getElementById('editVisibility').value = data.project.visibility;
+            document.getElementById('editOutputLink').value = data.project.output_link;
+            document.getElementById('editProjectLink').value = data.project.project_link;
+            document.getElementById('editAllowDownloads').checked = data.project.allow_downloads;
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('editProjectModal'));
+            modal.show();
+        } else {
+            alert('Error loading project data');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error loading project data');
+    }
+}
+
+// Update project
+async function updateProject() {
+    const form = document.getElementById('editProjectForm');
+    const formData = new FormData(form);
+    
+    try {
+        const response = await fetch(`/accounts/project/${currentProjectData.id}/edit/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Hide error messages
+            document.getElementById('editProjectError').classList.add('d-none');
+            document.getElementById('editProjectSuccess').classList.remove('d-none');
+            document.getElementById('editProjectSuccess').textContent = data.message;
+            
+            // Close modal after 1.5 seconds
+            setTimeout(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editProjectModal'));
+                modal.hide();
+                location.reload(); // Refresh to show updated data
+            }, 1500);
+        } else {
+            document.getElementById('editProjectError').textContent = data.message || 'Error updating project';
+            document.getElementById('editProjectError').classList.remove('d-none');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('editProjectError').textContent = 'Error updating project';
+        document.getElementById('editProjectError').classList.remove('d-none');
+    }
+}
+
+// Remove from Recent Uploads
+async function removeFromRecent(projectId) {
+    if (!confirm('Are you sure you want to remove this project from Recent Uploads?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/accounts/project/${projectId}/remove-from-recent/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Remove the card from the DOM
+            const projectCard = document.querySelector(`[data-project-id="${projectId}"]`).closest('.recent-upload-card');
+            if (projectCard) {
+                projectCard.remove();
+            }
+        } else {
+            alert('Error removing project from Recent Uploads');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error removing project from Recent Uploads');
+    }
+}
+</script>
 {% endblock %}
 
