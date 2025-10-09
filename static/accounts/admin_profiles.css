@@ -38,7 +38,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    background: white;
     border-radius: 20px 20px 0 0;
 }
 
@@ -477,3 +477,4 @@
     color: #fff;
     border-color: #ff0080;
 }
+

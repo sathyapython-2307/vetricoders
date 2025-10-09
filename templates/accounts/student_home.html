@@ -21,6 +21,22 @@
     .recent-upload-title { font-weight:700; color:#111827; }
     .meta-pill-inline { display:inline-block; padding:0.25rem 0.6rem; background:rgba(15,23,42,0.04); border-radius:999px; font-weight:600; }
     @media (max-width:576px){ .dashboard-center-group{gap:.5rem} .dashboard-profile-box{width:64px;height:64px} .img-student-profile{width:56px;height:56px} }
+
+    /* Center profile image on mobile */
+    @media (max-width: 767.98px) {
+        .dashboard-profile-box {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        .img-student-profile {
+            display: block !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+    }
     /* Override base purple icon color on this page */
     .notification-btn svg, .admin-sidebar .logo-row span { color: #374151 !important; }
     /* Page-scoped layout fixes: ensure main content sits to the right of the fixed sidebar */
@@ -48,6 +64,41 @@
         /* On small screens the sidebar is off-canvas; allow main content to use full width */
         .admin-main-content { margin-left: 0 !important; padding-left: 1rem !important; }
         .notification-container { right: 0.75rem; top: 0.75rem; }
+    }
+
+    /* --- Mobile centering for Recent Uploads --- */
+    @media (max-width: 767.98px) {
+        .recent-uploads-section {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            max-width: 98vw !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            box-sizing: border-box;
+        }
+        .recent-uploads-container {
+            display: block !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+        }
+        .recent-uploads-title {
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        .recent-uploads-row {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 1rem !important;
+        }
+        .recent-upload-card {
+            width: 100% !important;
+            max-width: 350px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
     }
 </style>
 {% endblock %}
@@ -379,24 +430,21 @@ document.addEventListener('DOMContentLoaded', function() {
     var closeBtn = document.getElementById('closeSidebarBtn');
     var sidebar = document.getElementById('adminSidebar');
     var overlay = document.getElementById('sidebarOverlay');
-    if (openBtn && sidebar && overlay) {
-        openBtn.onclick = function() {
-            sidebar.classList.add('sidebar-open');
-            overlay.style.display = 'block';
-        };
+    function openSidebar() {
+        sidebar.classList.add('sidebar-open');
+        sidebar.classList.add('show');
+        overlay.classList.add('show');
+        overlay.style.display = 'block';
     }
-    if (closeBtn && sidebar && overlay) {
-        closeBtn.onclick = function() {
-            sidebar.classList.remove('sidebar-open');
-            overlay.style.display = 'none';
-        };
+    function closeSidebar() {
+        sidebar.classList.remove('sidebar-open');
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+        overlay.style.display = 'none';
     }
-    if (overlay && sidebar) {
-        overlay.onclick = function() {
-            sidebar.classList.remove('sidebar-open');
-            overlay.style.display = 'none';
-        };
-    }
+    if (openBtn) openBtn.onclick = openSidebar;
+    if (closeBtn) closeBtn.onclick = closeSidebar;
+    if (overlay) overlay.onclick = closeSidebar;
 });
 </script>
 

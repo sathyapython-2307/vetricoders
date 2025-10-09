@@ -1,54 +1,47 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Add Student Modal logic
-const addStudentBtn = document.getElementById('addStudentBtn');
-const addStudentModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
-if(addStudentBtn) {
-    addStudentBtn.onclick = function(e) {
-        e.preventDefault();
-        addStudentModal.show();
-    };
-}
-const addStudentForm = document.getElementById('addStudentForm');
-if(addStudentForm) {
-    addStudentForm.onsubmit = async function(e) {
-        e.preventDefault();
-        document.getElementById('addStudentError').classList.add('d-none');
-        document.getElementById('addStudentSuccess').classList.add('d-none');
-        const formData = new FormData(addStudentForm);
-        const response = await fetch('/accounts/add-student/', {
-            method: 'POST',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-            body: formData
-        });
-        const data = await response.json();
-        if(data.success) {
-            document.getElementById('addStudentSuccess').classList.add('d-none');
-            document.getElementById('addStudentError').classList.add('d-none');
-            addStudentForm.reset();
-            // Show toast notification and close modal after 1.5s
-            const toast = document.getElementById('addStudentToast');
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-                bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
-            }, 1500);
-        } else {
-            document.getElementById('addStudentError').textContent = data.error || 'Error adding student.';
-            document.getElementById('addStudentError').classList.remove('d-none');
-        }
-    };
-}
-// Set max date for course joined date (future dates not allowed)
 document.addEventListener('DOMContentLoaded', function() {
-    const dateInput = document.getElementById('courseJoinedDate');
-    if (dateInput) {
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        dateInput.max = `${yyyy}-${mm}-${dd}`;
+    // Add Student Modal logic
+    const addStudentBtn = document.getElementById('addStudentBtn');
+    const addStudentModal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+    if(addStudentBtn) {
+        addStudentBtn.onclick = function(e) {
+            e.preventDefault();
+            addStudentModal.show();
+        };
     }
+    const addStudentForm = document.getElementById('addStudentForm');
+    if(addStudentForm) {
+        addStudentForm.onsubmit = async function(e) {
+            e.preventDefault();
+            document.getElementById('addStudentError').classList.add('d-none');
+            document.getElementById('addStudentSuccess').classList.add('d-none');
+            const formData = new FormData(addStudentForm);
+            const response = await fetch('/accounts/add-student/', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await response.json();
+            if(data.success) {
+                document.getElementById('addStudentSuccess').classList.add('d-none');
+                document.getElementById('addStudentError').classList.add('d-none');
+                addStudentForm.reset();
+                // Show toast notification and close modal after 1.5s
+                const toast = document.getElementById('addStudentToast');
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                    bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
+                }, 1500);
+            } else {
+                document.getElementById('addStudentError').textContent = data.error || 'Error adding student.';
+                document.getElementById('addStudentError').classList.remove('d-none');
+            }
+        };
+    }
+    // Set max date for course joined date (future dates not allowed)
+    // (remove, as not needed for manual text)
 });
 </script>
 <!-- Add Student Modal -->
@@ -95,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <div class="mb-3">
                                 <label for="courseJoinedDate" class="form-label">Course Joined Date</label>
-                                <input type="date" class="form-control" id="courseJoinedDate" name="course_joined_date" required min="" max="">
+                                <input type="text" class="form-control" id="courseJoinedDate" name="course_joined_date" required placeholder="YYYY-MM-DD">
                             </div>
                             <div class="mb-3">
                                 <label for="courseDetails" class="form-label">Course Details</label>

@@ -5,7 +5,7 @@ from .home_view import home
 from .admin_views import (admin_home, admin_projects, admin_profiles, 
                           student_projects_api, student_project_details, public_student_projects)
 from .student_views import student_home, student_projects, delete_project, record_project_view, toggle_project_like, edit_project, remove_from_recent_uploads
-from .notification_views import student_project_detail, toggle_follow, notifications
+from .notification_views import student_project_detail, toggle_follow, notifications, send_hire_notification
 from .views import student_profile_view, request_follow, handle_follow_request
 
 urlpatterns = [
@@ -29,6 +29,7 @@ urlpatterns = [
     path('project/<int:project_id>/edit/', edit_project, name='edit_project'),
     path('project/<int:project_id>/remove-from-recent/', remove_from_recent_uploads, name='remove_from_recent_uploads'),
     path('project/<int:project_id>/details/', student_project_detail, name='student_project_detail'),
+    path('project/<int:project_id>/hire/', send_hire_notification, name='send_hire_notification'),
     path('student/<int:student_id>/follow/', toggle_follow, name='toggle_follow'),
     path('notifications/', notifications, name='notifications'),
     path('projects/', student_projects, name='student_projects'),

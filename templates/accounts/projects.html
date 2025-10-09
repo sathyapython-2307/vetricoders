@@ -227,15 +227,17 @@
         const adminSidebar = document.getElementById('adminSidebar');
 
         function openSidebar() {
+            adminSidebar.classList.add('sidebar-open');
             adminSidebar.classList.add('show');
             sidebarOverlay.classList.add('show');
-            document.body.style.overflow = 'hidden';
+            sidebarOverlay.style.display = 'block';
         }
 
         function closeSidebar() {
+            adminSidebar.classList.remove('sidebar-open');
             adminSidebar.classList.remove('show');
             sidebarOverlay.classList.remove('show');
-            document.body.style.overflow = '';
+            sidebarOverlay.style.display = 'none';
         }
 
         openSidebarBtn.addEventListener('click', openSidebar);

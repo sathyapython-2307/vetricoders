@@ -88,6 +88,7 @@ class Notification(models.Model):
         ('like', 'Project Like'),
         ('follow', 'New Follow Request'),
         ('follow_accepted', 'Follow Request Accepted'),
+        ('hire', 'Hire Request'),
     )
 
     recipient = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='notifications')
@@ -103,4 +104,6 @@ class Notification(models.Model):
     def __str__(self):
         if self.notification_type == 'like':
             return f"{self.sender.username} liked your project {self.project.title}"
+        elif self.notification_type == 'hire':
+            return f"{self.sender.username} wants to hire you for project {self.project.title}"
         return f"{self.sender.username} started following you"

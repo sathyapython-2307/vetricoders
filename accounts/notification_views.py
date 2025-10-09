@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from .models import Project, StudentProfile, StudentFollow, Notification
 from django.utils import timezone
 
@@ -64,4 +65,27 @@ def notifications(request):
     
     return render(request, 'accounts/notifications.html', {
         'notifications': notifications
+    })
+
+@login_required
+@require_POST
+def send_hire_notification(request, project_id):
+    """Send a hire notification to the project owner"""
+    project = get_object_or_404(Project, id=project_id)
+    
+    # Don't allow self-hiring
+    if project.student.user == request.user:
+        return JsonResponse({'success': False, 'message': 'Cannot hire yourself'})
+    
+    # Create hire notification
+    Notification.objects.create(
+        recipient=project.student,
+        sender=request.user,
+        notification_type='hire',
+        project=project
+    )
+    
+    return JsonResponse({
+        'success': True,
+        'message': f'Hire request sent to {project.student.student_name}'
     })
