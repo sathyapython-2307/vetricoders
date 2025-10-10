@@ -10,6 +10,8 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    /* prevent body from scrolling when sidebar scrolls; keep layout stable */
+    overflow: hidden;
     transition: transform 0.3s cubic-bezier(.4,0,.2,1);
 }
 @media (max-width: 991.98px) {
@@ -40,6 +42,8 @@
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #eee;
+    /* keep header out of the scrollable area */
+    flex: 0 0 auto;
 }
 .admin-sidebar .logo-row img {
     height: 48px;
@@ -57,6 +61,21 @@
     width: 100%;
     flex: 1 1 auto;
     padding: 0 1rem;
+    /* allow this flex child to shrink below its content and be scrollable on small/tall viewports */
+    min-height: 0; /* necessary for flex children to enable overflow */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    .admin-sidebar .nav,
+    .admin-sidebar > nav {
+        margin-top: 1.5rem;
+        width: 100%;
+        flex: 1 1 auto;
+        padding: 0 1rem;
+        /* allow this flex child to shrink below its content and be scrollable on small/tall viewports */
+        min-height: 0; /* necessary for flex children to enable overflow */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
 /* Logout Form */
@@ -65,6 +84,17 @@
     padding: 1.5rem 1rem 1rem 1rem;
     margin-top: auto;
     margin-bottom: 0.5rem;
+    /* keep logout section always visible (outside the nav scroll area) */
+    flex: 0 0 auto;
+    .admin-sidebar .logout-form,
+    .admin-sidebar .logout-form-custom {
+        width: 100%;
+        padding: 1.5rem 1rem 1rem 1rem;
+        margin-top: auto;
+        margin-bottom: 0.5rem;
+        /* keep logout section always visible (outside the nav scroll area) */
+        flex: 0 0 auto;
+    }
 }
 
 .admin-sidebar .btn-logout {
@@ -72,6 +102,13 @@
     padding: 0.7rem;
     font-weight: 600;
     border-radius: 8px;
+    .admin-sidebar .btn-logout,
+    .admin-sidebar .btn-logout-custom {
+        width: 100%;
+        padding: 0.7rem;
+        font-weight: 600;
+        border-radius: 8px;
+    }
 }
 /* ...existing code... */
 .admin-sidebar .nav-link {

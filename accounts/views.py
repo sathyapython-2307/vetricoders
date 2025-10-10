@@ -184,6 +184,18 @@ def add_student(request):
 				return JsonResponse({'success': False, 'error': 'Course joined date must not be in the future.'})
 		except Exception:
 			return JsonResponse({'success': False, 'error': 'Invalid course joined date.'})
+		# Email and phone validation (format checks)
+		from django.core.validators import EmailValidator
+		from django.core.exceptions import ValidationError
+		import re
+
+		try:
+			EmailValidator()(student_email)
+		except ValidationError:
+			return JsonResponse({'success': False, 'error': 'Please enter a valid email address.'})
+
+		if not re.match(r"^\+?[1-9]\d{7,14}$", student_contact or ""):
+			return JsonResponse({'success': False, 'error': 'Invalid contact number. Enter a valid international number (e.g., +14155552671).'})
 		# Validate email uniqueness
 		if StudentProfile.objects.filter(student_email=student_email).exists():
 			return JsonResponse({'success': False, 'error': 'Email already exists.'})

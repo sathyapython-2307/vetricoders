@@ -45,7 +45,7 @@
 </div>
 <div class="admin-main-content">
     <div class="d-flex justify-content-start mb-3">
-    <button class="btn btn-pink d-flex align-items-center px-4 py-2 btn-search-dev-admin">
+    <button id="goToProfilesBtn" class="btn btn-pink d-flex align-items-center px-4 py-2 btn-search-dev-admin">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             Search the developers
         </button>
@@ -55,8 +55,14 @@
             <div class="dashboard-card d-flex flex-column justify-content-between align-items-start p-4 h-100 dashboard-card-custom">
                 <div class="d-flex w-100 justify-content-between align-items-center mb-2">
                     <span class="fw-semibold dashboard-title">Total Projects</span>
-                    <span class="dashboard-badge-blue">
-                        <svg width="28" height="28" fill="#3b82f6" viewBox="0 0 16 16"><path d="M10.5 2a.5.5 0 0 1 .5.5V3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h1v-.5a.5.5 0 0 1 1 0V3h4v-.5a.5.5 0 0 1 .5-.5zM3 5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H3z"/></svg>
+                    <span class="dashboard-badge-blue" aria-hidden="true">
+                        <!-- modern 2x2 grid icon for projects -->
+                        <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Projects">
+                            <rect x="3" y="3" width="10" height="10" rx="2" fill="#3b82f6" />
+                            <rect x="15" y="3" width="10" height="10" rx="2" fill="#60a5fa" />
+                            <rect x="3" y="15" width="10" height="10" rx="2" fill="#60a5fa" />
+                            <rect x="15" y="15" width="10" height="10" rx="2" fill="#93c5fd" />
+                        </svg>
                     </span>
                 </div>
                 <div class="fw-bold dashboard-value">{{ total_projects }}</div>
@@ -70,8 +76,16 @@
                 <div class="dashboard-card d-flex flex-column justify-content-between align-items-start p-4 h-100 dashboard-card-custom">
                     <div class="d-flex w-100 justify-content-between align-items-center mb-2">
                         <span class="fw-semibold dashboard-title">Candidates</span>
-                        <span class="dashboard-badge-blue" style="background:#f3e8ff;">
-                            <svg width="28" height="28" fill="#a259ff" viewBox="0 0 16 16"><path d="M13 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H13zm-6-6a3 3 0 1 1 6 0 3 3 0 0 1-6 0z"/><path d="M6 8a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/></svg>
+                        <span class="dashboard-badge-blue" style="background:#f3e8ff;" aria-hidden="true">
+                            <!-- single user/person icon (clean, centered) -->
+                            <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Candidate" focusable="false">
+                                <g fill="#7c3aed">
+                                    <!-- head -->
+                                    <circle cx="12" cy="8" r="3" />
+                                    <!-- shoulders/torso -->
+                                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6v1H4v-1z" />
+                                </g>
+                            </svg>
                         </span>
                     </div>
                     <div class="fw-bold dashboard-value">{{ candidates }}</div>
@@ -161,6 +175,15 @@ if(openBtn && closeBtn && overlay && sidebar) {
             overlay.classList.remove('show');
             overlay.style.display = 'none';
         }
+    });
+}
+// Make Overview search button navigate to the profiles page and focus the search input
+const goToProfilesBtn = document.getElementById('goToProfilesBtn');
+if (goToProfilesBtn) {
+    goToProfilesBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        // navigate to admin_profiles page which has the actual search form
+        window.location.href = '{% url "admin_profiles" %}';
     });
 }
 </script>

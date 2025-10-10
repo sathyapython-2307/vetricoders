@@ -518,3 +518,49 @@
         justify-content: center;
     }
 }
+
+/* NOTE: Narrow, high-specificity override for ~1024px is defined below (1008px - 1040px).
+   Removed broader ranges so the special layout only applies in the tight band near 1024px. */
+
+/* Strong override specifically for admin template container used in admin_projects.html
+   Template uses: <div class="admin-main-content"> <div class="row g-4 mt-3"> ... </div>
+   Make this grid 2 columns only around 1024px and neutralize Bootstrap col classes. */
+@media (min-width: 1008px) and (max-width: 1040px) {
+    .admin-main-content .row {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 2rem !important;
+        align-items: start;
+    }
+
+    /* Ensure Bootstrap column wrappers don't force widths/flex */
+    .admin-main-content .row > [class*="col-"] {
+        width: auto !important;
+        max-width: none !important;
+        float: none !important;
+        flex: none !important;
+    }
+
+    /* Ensure project cards stretch to the grid cell */
+    .admin-main-content .row > [class*="col-"] .project-card {
+        width: 100% !important;
+    }
+
+    /* Slightly reduce screenshot height at this width to help footer fit */
+    .admin-main-content .project-screenshot-container,
+    .admin-main-content .project-card .project-screenshot-container {
+        height: 170px !important;
+    }
+
+    /* Ensure cards are not clipped by height/overflow at this breakpoint */
+    .admin-main-content .row > [class*="col-"] .project-card {
+        overflow: visible !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+
+    /* Give the content area a little extra bottom padding so footer has breathing room */
+    .admin-main-content .row > [class*="col-"] .project-card .project-content {
+        padding-bottom: 1.25rem !important;
+    }
+}

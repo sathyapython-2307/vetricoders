@@ -346,7 +346,7 @@
 /* Enhanced Gallery Layout */
 .admin-main-content {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
+    height: auto;
     padding: 1rem 0;
 }
 
@@ -476,5 +476,27 @@
     background: #ff0080;
     color: #fff;
     border-color: #ff0080;
+}
+
+/* iPad Pro (12.9-inch) adjustments for vertical scrolling */
+@media only screen
+and (min-width: 1024px)
+and (max-width: 1366px)
+and (-webkit-min-device-pixel-ratio: 2) {
+    body, html {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        height: auto !important;
+    }
+
+    .admin-main-content {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-sidebar {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
